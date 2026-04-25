@@ -1,12 +1,7 @@
-import Dashboard from "./components/Dashboard";
+import DonationsPage from "./pages/DonationsPage";
 
 function App() {
-  return (
-    <div>
-      <h1>Donaton</h1>
-      <Dashboard />
-    </div>
-  );
+  return <DonationsPage />;
 }
 
 export default App;
