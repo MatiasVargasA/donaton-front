@@ -1,93 +1,138 @@
-export default function DonationsPage() {
-  return (
-    <div className="bg-surface min-h-screen">
+import { useState } from "react";
 
-      {/* TOP BAR */}
-      <header className="bg-white border-b flex justify-between items-center px-6 h-16 fixed w-full z-40">
-        <h1 className="text-xl font-bold text-blue-800">Donaton</h1>
-      </header>
+function DonationPage() {
+  const [form, setForm] = useState({
+    tipo: "",
+    entidad: "",
+    cantidad: "",
+    prioridad: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const nuevaDonacion = {
+      ...form,
+      top: `${Math.random() * 80}%`,
+      left: `${Math.random() * 80}%`,
+      color:
+        form.prioridad === "critica"
+          ? "red"
+          : form.prioridad === "urgente"
+          ? "orange"
+          : "blue",
+    };
+
+    const guardadas = JSON.parse(localStorage.getItem("donaciones")) || [];
+
+    localStorage.setItem(
+      "donaciones",
+      JSON.stringify([...guardadas, nuevaDonacion])
+    );
+
+    alert("Donación guardada");
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-100 flex">
 
       {/* SIDEBAR */}
-      <aside className="hidden lg:flex flex-col w-64 h-screen bg-gray-100 fixed top-16 left-0 p-4">
-        <h2 className="font-bold mb-4">Menú</h2>
+      <aside className="w-64 bg-white shadow-lg p-6">
+        <h1 className="text-xl font-bold text-blue-700 mb-6">Donaton</h1>
 
-        <button className="text-left p-2 hover:bg-gray-200 rounded">
-          Dashboard
-        </button>
-
-        <button className="text-left p-2 hover:bg-gray-200 rounded">
-          Donaciones
-        </button>
+        <ul className="space-y-3">
+          <li className="text-gray-600">Panel</li>
+          <li className="text-blue-700 font-bold">Registro</li>
+          <li><a href="/mapa" className="text-gray-600 hover:text-blue-700 transition">Mapa</a></li>
+        </ul>
       </aside>
 
-      {/* MAIN */}
-      <main className="lg:ml-64 pt-24 p-6">
+      {/* CONTENIDO */}
+      <div className="flex-1 p-10">
 
-        <h1 className="text-3xl font-bold mb-6">
+        <h1 className="text-3xl font-bold text-blue-700 mb-6">
           Registro de Donaciones
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-8 rounded-xl shadow-md grid grid-cols-2 gap-6"
+        >
+          {/* Tipo */}
+          <div>
+            <label className="block mb-2 font-semibold">
+              Tipo de Donación
+            </label>
+            <select
+              name="tipo"
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg"
+            >
+              <option value="">Seleccionar</option>
+              <option value="alimentos">Alimentos</option>
+              <option value="medico">Médico</option>
+            </select>
+          </div>
 
-          {/* FORM */}
-          <div className="md:col-span-8 bg-white p-6 rounded-xl shadow">
-
-            <h2 className="text-xl font-semibold mb-4">
-              Detalles del Suministro
-            </h2>
-
-            <div className="grid grid-cols-2 gap-4">
-
-              <select className="p-2 border rounded">
-                <option>Seleccionar categoría</option>
-                <option>Alimentos</option>
-                <option>Médico</option>
-              </select>
-
-              <input
-                className="p-2 border rounded"
-                placeholder="Entidad donante"
-              />
-
-              <input
-                className="p-2 border rounded"
-                type="number"
-                placeholder="Cantidad"
-              />
-
-              <select className="p-2 border rounded">
-                <option>kg</option>
-                <option>unidades</option>
-              </select>
-
-            </div>
-
-            <textarea
-              className="w-full mt-4 p-2 border rounded"
-              placeholder="Descripción"
+          {/* Entidad */}
+          <div>
+            <label className="block mb-2 font-semibold">
+              Entidad Donante
+            </label>
+            <input
+              name="entidad"
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg"
             />
-
           </div>
 
-          {/* RESUMEN */}
-          <div className="md:col-span-4 bg-blue-200 p-6 rounded-xl">
-
-            <h2 className="text-xl font-bold mb-4">
-              Resumen
-            </h2>
-
-            <p>Categoría: -</p>
-            <p>Cantidad: 0</p>
-
-            <button className="mt-4 w-full bg-blue-700 text-white p-3 rounded">
-              Confirmar
-            </button>
-
+          {/* Cantidad */}
+          <div>
+            <label className="block mb-2 font-semibold">
+              Cantidad
+            </label>
+            <input
+              name="cantidad"
+              type="number"
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg"
+            />
           </div>
 
-        </div>
+          {/* Prioridad */}
+          <div>
+            <label className="block mb-2 font-semibold">
+              Prioridad
+            </label>
+            <select
+              name="prioridad"
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg"
+            >
+              <option value="normal">Normal</option>
+              <option value="urgente">Urgente</option>
+              <option value="critica">Crítica</option>
+            </select>
+          </div>
 
-      </main>
+          {/* BOTÓN */}
+          <button
+            type="submit"
+            className="col-span-2 bg-blue-700 text-white py-3 rounded-lg hover:bg-blue-800"
+          >
+            Guardar Donación
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
+
+export default DonationPage;
